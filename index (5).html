@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CODM Tactical Kid</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(45deg, orange, blue, red);
+    background-size: 400% 400%;
+    animation: bgmove 8s infinite alternate;
+    color: white;
+}
+
+@keyframes bgmove {
+    0% {background-position: left;}
+    100% {background-position: right;}
+}
+
+.section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    font-size: 50px;
+    text-shadow: 0 0 20px black;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+input, textarea {
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+    font-size: 16px;
+}
+
+textarea {
+    height: 120px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="section">
+    <h1>Welcome to CODM Tactical Kid</h1>
+    <button onclick="alert('Want more tips? Scroll down!')">Click Me</button>
+</div>
+
+<div class="section">
+    <h2>Want more tips? Email me 📩</h2>
+
+    <input type="email" id="email" placeholder="Your Email">
+
+    <input type="text" id="countrycode" placeholder="Country Code (+91)">
+
+    <input type="text" id="phone" placeholder="Phone Number">
+
+    <textarea id="message" placeholder="Your Message"></textarea>
+
+    <button onclick="sendMail()">Send</button>
+</div>
+
+<script>
+function sendMail() {
+    let email = document.getElementById("email").value;
+    let countrycode = document.getElementById("countrycode").value;
+    let phone = document.getElementById("phone").value;
+    let message = document.getElementById("message").value;
+
+    let link = "https://mail.google.com/mail/?view=cm&fs=1&to=aadvikvivek201518@gmail.com"
+        + "&su=Message from Website"
+        + "&body=Email: " + email
+        + "%0ACountry Code: " + countrycode
+        + "%0APhone: " + phone
+        + "%0AMessage: " + message;
+
+    window.open(link, '_blank');
+}
+</script>
+
+</body>
+</html>
