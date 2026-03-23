@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CODM Tactical Kid</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html{
+scroll-behavior:smooth;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(-45deg,#ff6600,#001f4d,#cc0000,#000000);
+background-size:400% 400%;
+animation:bgmove 10s ease infinite;
+color:white;
+overflow-x:hidden;
+overflow-y:hidden;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+header{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
+padding:12px;
+background:rgba(0,0,0,0.45);
+backdrop-filter:blur(12px);
+z-index:1000;
+box-shadow:0 0 20px rgba(255,255,255,0.08);
+}
+
+header a{
+color:white;
+text-decoration:none;
+padding:10px 16px;
+border-radius:12px;
+transition:0.35s;
+font-size:14px;
+background:rgba(255,255,255,0.04);
+box-shadow:0 0 10px rgba(255,255,255,0.08);
+}
+
+header a:hover{
+background:rgba(255,255,255,0.18);
+transform:translateY(-2px);
+}
+
+.locked{
+pointer-events:none;
+opacity:0.4;
+}
+
+@keyframes fadeAway{
+0%{opacity:1; transform:scale(1);}
+100%{opacity:0; transform:scale(0.8);}
+}
+
+.fade-remove{
+animation:fadeAway 1.5s forwards;
+}
+
+section{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:100px 15px;
+text-align:center;
+}
+
+#game{
+height:100vh;
+position:relative;
+background:linear-gradient(to top,#444,#999);
+overflow:hidden;
+}
+
+.target{
+width:50px;
+height:50px;
+background:red;
+border-radius:50%;
+position:absolute;
+cursor:pointer;
+box-shadow:0 0 20px red;
+animation:moveTarget 2s infinite alternate ease-in-out;
+}
+
+@keyframes moveTarget{
+from{transform:translateX(0);}
+to{transform:translateX(40px);}
+}
+
+#kills{
+position:absolute;
+top:85px;
+left:15px;
+font-size:18px;
+background:rgba(0,0,0,0.5);
+padding:8px 14px;
+border-radius:10px;
+}
+
+.popup{
+position:absolute;
+top:120px;
+right:10px;
+left:10px;
+margin:auto;
+background:rgba(0,0,0,0.82);
+padding:16px;
+border-radius:15px;
+box-shadow:0 0 20px orange;
+font-size:15px;
+max-width:320px;
+}
+
+.unlock{
+position:absolute;
+top:40%;
+left:50%;
+transform:translate(-50%,-50%);
+background:black;
+padding:20px;
+border-radius:15px;
+display:none;
+font-size:20px;
+box-shadow:0 0 20px orange;
+width:80%;
+max-width:320px;
+}
+
+.card{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(8px);
+padding:20px;
+border-radius:15px;
+margin:10px;
+width:90%;
+max-width:350px;
+box-shadow:0 0 15px rgba(255,255,255,0.15);
+}
+
+input,textarea,select{
+width:90%;
+max-width:300px;
+padding:12px;
+margin:8px;
+border:none;
+border-radius:8px;
+font-size:16px;
+}
+
+textarea{
+height:120px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+}
+
+.crosshair{
+position:fixed;
+width:40px;
+height:40px;
+border:2px solid white;
+border-radius:50%;
+pointer-events:none;
+transform:translate(-50%, -50%);
+z-index:9999;
+}
+
+#thankyou{
+background:linear-gradient(to top,#000000,#111111,#222222);
+}
+
+@media(max-width:768px){
+.crosshair{
+display:none;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<a href="#game" id="homeBtn">Home</a>
+<a href="#tips" class="locked navlock">Tips</a>
+<a href="#submit" class="locked navlock">Send Info</a>
+<a href="#contact" class="locked navlock">Contact Us</a>
+<a href="#thankyou" class="locked navlock">Thank You</a>
+</header>
+
+<div class="crosshair" id="crosshair"></div>
+
+<section id="game">
+<div id="kills">Kills: 0 / 10</div>
+
+<div class="popup" id="startPopup">
+To Unlock The Website Kill 10 Red Targets 🎯<br><br>
+PC: Left Click 🖱️<br>
+Mobile: Tap 📱
+</div>
+
+<div class="unlock" id="unlockPopup">
+Home screen getting removed...
+</div>
+</section>
+
+<section id="tips">
+<h1>Welcome To CODMTACTICALKID'S Website</h1>
+
+<div class="card">Mission Stats: Kills <span id="killCounter">0</span></div>
+
+<div class="card">
+Weapon:
+<select id="weaponSelect">
+<option>AK-47</option>
+<option>M4A1</option>
+<option>Sniper</option>
+<option>Shotgun</option>
+</select>
+</div>
+
+<div class="card">For more tips contact below 🎯</div>
+</section>
+
+<section id="submit">
+<h2>Send Your COD Information</h2>
+<div class="card">
+<input id="realname" placeholder="Real Name">
+<input id="codname" placeholder="COD Username">
+<button onclick="sendCOD()">Send COD Info</button>
+</div>
+</section>
+
+<section id="contact">
+<h2>Contact Us</h2>
+<div class="card">
+<input id="email" placeholder="Your Gmail">
+<input id="countrycode" placeholder="Phone Code">
+<input id="phone" placeholder="Phone Number">
+<textarea id="message" placeholder="Your Message"></textarea>
+<button onclick="sendMail()">Send Query</button>
+</div>
+</section>
+
+<section id="thankyou">
+<h1>Thank You For Visiting 🎯</h1>
+<div class="card">
+Thanks for visiting CODMTACTICALKID'S Website 🔥<br><br>
+Stay sharp and keep grinding 🚀
+</div>
+</section>
+
+<script>
+let kills=0;
+let unlocked=false;
+const game=document.getElementById("game");
+
+document.addEventListener('mousemove',function(e){
+const c=document.getElementById('crosshair');
+if(c){
+c.style.left=e.clientX+'px';
+c.style.top=e.clientY+'px';
+}
+});
+
+function createTarget(){
+let target=document.createElement("div");
+target.classList.add("target");
+
+target.style.left=Math.random()*85+"vw";
+target.style.top=(Math.random()*65+20)+"vh";
+
+target.onclick=function(){
+target.remove();
+kills++;
+
+document.getElementById("kills").innerText="Kills: "+kills+" / 10";
+document.getElementById("killCounter").innerText=kills;
+
+if(kills<10){
+createTarget();
+}
+
+if(kills===10 && !unlocked){
+unlocked=true;
+
+document.getElementById("unlockPopup").style.display="block";
+document.getElementById("startPopup").style.display="none";
+
+document.getElementById("homeBtn").classList.add("fade-remove");
+document.getElementById("game").classList.add("fade-remove");
+
+setTimeout(()=>{
+document.body.style.overflowY="auto";
+
+document.querySelectorAll('.navlock').forEach(el=>{
+el.classList.remove('locked');
+});
+
+window.scrollTo({
+top:document.getElementById("tips").offsetTop,
+behavior:'smooth'
+});
+
+},1800);
+
+setTimeout(()=>{
+document.getElementById("unlockPopup").style.display="none";
+document.getElementById("homeBtn").style.display="none";
+document.getElementById("game").style.display="none";
+},3000);
+}
+};
+
+game.appendChild(target);
+}
+
+for(let i=0;i<3;i++){
+createTarget();
+}
+
+document.querySelectorAll('header a').forEach(link=>{
+link.addEventListener('click',function(e){
+e.preventDefault();
+
+if(this.classList.contains('locked')) return;
+
+const target=document.querySelector(this.getAttribute('href'));
+
+window.scrollTo({
+top:target.offsetTop,
+behavior:'smooth'
+});
+});
+});
+
+document.getElementById('weaponSelect').addEventListener('change',function(){
+alert('Weapon Equipped: '+this.value);
+});
+
+function sendCOD(){
+let realname=document.getElementById("realname").value;
+let codname=document.getElementById("codname").value;
+
+let body="Real Name: "+realname+"%0ACOD Username: "+codname;
+window.location.href="mailto:aadvikvivek201518@gmail.com?subject=COD Info&body="+body;
+}
+
+function sendMail(){
+let email=document.getElementById("email").value;
+let code=document.getElementById("countrycode").value;
+let phone=document.getElementById("phone").value;
+let msg=document.getElementById("message").value;
+
+let body=
+"Gmail: "+email+"%0A"+
+"Phone Code: "+code+"%0A"+
+"Phone: "+phone+"%0A"+
+"Message: "+msg;
+
+if(navigator.share){
+navigator.share({
+title:'CODM Tactical Kid',
+text:body
+}).catch(console.error);
+}else{
+window.location.href="mailto:aadvikvivek201518@gmail.com?subject=Query&body="+body;
+}
+}
+</script>
+
+</body>
+</html>
