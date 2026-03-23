@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CODM Tactical Kid</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(-45deg, #ff6600, #001f4d, #cc0000, #000000);
+    background-size: 400% 400%;
+    animation: bgmove 10s ease infinite;
+    color: white;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+@keyframes bgmove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+#game {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background: linear-gradient(to top,#555,#999);
+    overflow: hidden;
+}
+
+.target {
+    width: 50px;
+    height: 50px;
+    background: red;
+    border-radius: 50%;
+    position: absolute;
+    cursor: pointer;
+    box-shadow: 0 0 15px red;
+}
+
+#kills {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.popup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: black;
+    padding: 25px;
+    border-radius: 15px;
+    display: none;
+    font-size: 28px;
+    box-shadow: 0 0 20px orange;
+}
+
+.section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 55px;
+    text-shadow: 0 0 15px black;
+}
+
+button {
+    padding: 14px 28px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+}
+
+.card {
+    background: rgba(0,0,0,0.35);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+input, textarea {
+    width: 300px;
+    padding: 12px;
+    margin: 8px;
+    border: none;
+    border-radius: 8px;
+}
+
+textarea {
+    height: 120px;
+}
+
+.crosshair {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.loading {
+    width: 300px;
+    height: 10px;
+    background: rgba(255,255,255,0.2);
+    margin-top: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.loading-bar {
+    width: 0;
+    height: 100%;
+    background: white;
+    animation: load 4s infinite;
+}
+
+@keyframes load {
+    0% {width: 0;}
+    100% {width: 100%;}
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: float 10s linear infinite;
+}
+
+@keyframes float {
+    from {transform: translateY(100vh);}
+    to {transform: translateY(-100px);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="crosshair" id="crosshair"></div>
+
+<div id="game">
+    <div id="kills">Kills: 0 / 10</div>
+    <div class="popup" id="popup">You have killed 10 dummys 🎯<br>You may scroll down</div>
+</div>
+
+<div class="particle" style="left:10%; animation-duration:8s;"></div>
+<div class="particle" style="left:30%; animation-duration:10s;"></div>
+<div class="particle" style="left:60%; animation-duration:7s;"></div>
+<div class="particle" style="left:80%; animation-duration:9s;"></div>
+
+<div class="section">
+    <h1>CODM Tactical Kid</h1>
+    <button onclick="alert('Mission started! Scroll down!')">Start Mission</button>
+    <div class="loading">
+        <div class="loading-bar"></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Battle Stats</h2>
+    <div class="card">🎯 Accuracy Tips</div>
+    <div class="card">⚡ Fast Reflex Tricks</div>
+    <div class="card">🛡 Loadout Suggestions</div>
+</div>
+
+<div class="section">
+    <h2>Email Me 📩</h2>
+
+    <input type="email" id="email" placeholder="Your Email">
+    <input type="text" id="countrycode" placeholder="Country Code (+91)">
+    <input type="text" id="phone" placeholder="Phone Number">
+    <textarea id="message" placeholder="Your Message"></textarea>
+
+    <button onclick="sendMail()">Send</button>
+</div>
+
+<script>
+let kills = 0;
+const game = document.getElementById("game");
+
+document.addEventListener('mousemove', function(e) {
+    document.getElementById('crosshair').style.left = e.clientX + 'px';
+    document.getElementById('crosshair').style.top = e.clientY + 'px';
+});
+
+function createTarget() {
+    let target = document.createElement("div");
+    target.classList.add("target");
+
+    target.style.left = Math.random()*90 + "vw";
+    target.style.top = Math.random()*70 + "vh";
+
+    target.onclick = function() {
+        target.remove();
+        kills++;
+        document.getElementById("kills").innerText = "Kills: " + kills + " / 10";
+
+        if(kills >= 10){
+            document.body.style.overflowY = "auto";
+            document.getElementById("popup").style.display = "block";
+        } else {
+            createTarget();
+        }
+    };
+
+    game.appendChild(target);
+}
+
+for(let i=0;i<3;i++){
+    createTarget();
+}
+
+function sendMail() {
+    let email = document.getElementById("email").value;
+    let countrycode = document.getElementById("countrycode").value;
+    let phone = document.getElementById("phone").value;
+    let message = document.getElementById("message").value;
+
+    let body =
+        "Email: " + email + "%0A" +
+        "Country Code: " + countrycode + "%0A" +
+        "Phone: " + phone + "%0A" +
+        "Message: " + message;
+
+    window.location.href =
+        "mailto:aadvikvivek201518@gmail.com?subject=Message from CODM Tactical Kid&body=" + body;
+}
+</script>
+
+</body>
+</html>
+<div class="section">
+    <h2>Mission Stats</h2>
+    <div class="card">Kills: <span id="killCounter">0</span></div>
+    <div class="card">
+        Weapon:
+        <select id="weaponSelect">
+            <option>AK-47</option>
+            <option>M4A1</option>
+            <option>Sniper</option>
+            <option>Shotgun</option>
+        </select>
+    </div>
+</div>
+
+<script>
+let kills = 0;
+document.addEventListener('click', function() {
+    kills++;
+    document.getElementById('killCounter').innerText = kills;
+});
+
+// Weapon selector alert
+document.getElementById('weaponSelect').addEventListener('change', function() {
+    alert('Weapon Equipped: ' + this.value);
+});
+
+// Enhanced mobile email opening
+function sendMail() {
+    let email = document.getElementById("email").value;
+    let countrycode = document.getElementById("countrycode").value;
+    let phone = document.getElementById("phone").value;
+    let message = document.getElementById("message").value;
+
+    let body = 
+        "Email: " + email + "%0A" +
+        "Country Code: " + countrycode + "%0A" +
+        "Phone: " + phone + "%0A" +
+        "Message: " + message;
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'Message from CODM Tactical Kid',
+            text: body
+        }).catch(console.error);
+    } else {
+        window.location.href = "mailto:aadvikvivek201518@gmail.com?subject=Message from CODM Tactical Kid&body=" + body;
+    }
+});
+</script>
